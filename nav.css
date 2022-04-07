@@ -1,0 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Utilidades */
+li, a {
+    text-decoration: none;
+    list-style: none;
+    color: wheat;
+}
+
+/* Body */
+body {
+    background-color: rgba(230, 217, 199, 0.979);
+
+}
+
+/* Nav Start */
+nav {
+    margin: auto;
+    background-color: #0d6efd;
+    font-size: 20px;
+    /* margin-top: 50px; */
+}
+
+.menu-horizontal {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+.menu-horizontal > li > a {
+    display: block;
+    padding: 15px 20px;
+}
+
+.menu-horizontal > li:hover {
+    background-color: black;
+}
+
+.menu-vertical {
+    position: absolute;
+    display: none;
+    width: 200px;
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.menu-horizontal li:hover .menu-vertical {
+    display: block;
+}
+
+.menu-vertical li:hover {
+    background-color: black;
+}
+
+.menu-vertical li a{
+    display: block;
+    padding: 15px 15px 15px 20px;
+}
+
+/* Nav End */
+
+/* Header Start */
+header {
+    background-color: rgb(37, 35, 35);
+    padding: 15px;
+}
+
+h1 {
+    color: wheat;
+    text-align: center;
+}
+/* Header End */
+
+.announcement { 
+    background-color: #0d6efd;
+    background-color: rgba(70, 203, 243, .2);
+    margin: 20px 20px;
+    padding: 15px;
+    height: 450px;
+    border-radius: 20px ;
+}
+
+.announcement > h3 {
+    text-align: center;
+    font-size: 25px;
+}
+
+.list-item {
+    color: black;
+    font-size: 20px;
+    margin: 20px 0;
+}

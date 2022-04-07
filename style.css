@@ -1,0 +1,70 @@
+*,
+::before,
+::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.salir {
+    background-color: #a22;
+}
+
+body {
+    padding: 50px;
+    background-color: #4e8;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+.alert {
+    margin: 0 auto;
+    margin-top: 30px;
+    width: 500px;
+    background-color: rgb(226, 217, 217);
+}
+p{
+    color: #000;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.container-form {
+    margin-bottom: 30px;
+}
+
+.container-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.btn {
+    width: 200px;
+    height: 50px;
+}
+
+.ok {
+    text-align: center;
+    width: 100%;
+    padding: 12px;
+    background-color: #4e8;
+    color: #fff;
+}
+
+.bad {
+    text-align: center;
+    width: 100%;
+    padding: 12px;
+    background-color: #a22;
+    color: #fff;
+}
+
+.input-size {
+    width: 50px;
+}
