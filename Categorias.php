@@ -97,7 +97,7 @@ $secondField = "categoria";
         <div class="container-form">
             <!-- CAMBIAR LOS PLACEHOLDES POR NOMBRE DE CATALOGO -->
             <label for="id">Clave</label>
-            <input type="text" name="id" id="id" placeholder="clave" class="form-control my-3 w-25" value="<?php echo htmlspecialchars($idQuery); ?>">
+            <input type="text" name="id" placeholder="clave" class="form-control my-3 w-25" value="<?php echo htmlspecialchars($idQuery); ?>">
             <label for="name">Categoria</label>
             <input type="text" name="name" id="name" placeholder="categoria" class="form-control my-3" value="<?php echo htmlspecialchars($nameQuery); ?>">
         </div>
