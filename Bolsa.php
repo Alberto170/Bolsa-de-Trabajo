@@ -2,9 +2,26 @@
 include("conexion.php");
 $msg = ""; //Cambiar los mensajes de cada validacion respecto a la tabla
 
-//name de los Input en HTML
+//name de los Input para las Consultas
 $idQuery = ""; //Llena el campo id con el id de la tabla en html
 $nameQuery = ""; //Llena el campo name con el name de la tabla en html
+$lastname1Query = "";
+$lastname2Query = "";
+$estadoCivilQuery = "";
+$direccionQuery = "";
+$telefonoQuery = "";
+$sexoQuery = "";
+$fechaNacimientoQuery = "";
+$estatusQuery = "";
+$nacionalidadQuery = "";
+$escolaridadQuery = "";
+$experienciaQuery = "";
+$perfilQuery = "";
+$fechaIngresoQuery = "";
+$idDocumentosQuery = "";
+$observacionesQuery = "";
+
+//Name/Id de los Inputs
 $id = $_POST['id']; //id hare referencia a la clave de la tabla actual
 $name = trim($_POST['name']); //name hare referencia al campo nombre de la tabla actual
 $aPaterno = $_POST['aPaterno'];
@@ -79,7 +96,7 @@ $observations = "observaciones";
 
     // BAJA
     if (isset($_POST["baja"])) {
-        $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id' && $nombre = '$name'";
+        $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id'";
         $resultado = mysqli_query($conexion, $consulta);
         $row = mysqli_fetch_array($resultado);
         if ($row > 0) {
@@ -100,6 +117,21 @@ $observations = "observaciones";
             if ($getConsulta > 0) {
                 $idQuery = $getConsulta[$cveTabla];
                 $nameQuery = $getConsulta[$nombre];
+                $lastname1Query = $getConsulta[$lastname1];
+                $lastname2Query = $getConsulta[$lastname2];
+                $perfilQuery = $getConsulta[$cvePerfil];
+                $direccionQuery = $getConsulta[$address];
+                $telefonoQuery = $getConsulta[$phoneNumber];
+                $sexoQuery = $getConsulta[$sex];
+                $estatusQuery = $getConsulta[$status];
+                $estadoCivilQuery = $getConsulta[$maritalStatus];
+                $fechaNacimientoQuery = $getConsulta[$birthDay];
+                $experienciaQuery = $getConsulta[$cveExperiencia];
+                $escolaridadQuery = $getConsulta[$cveEscolaridad];
+                $idDocumentosQuery= $getConsulta[$idDocumentosBolsa];
+                $observacionesQuery = $getConsulta[$observations];
+                $fechaIngresoQuery = $getConsulta[$admissionDate];
+                $nacionalidadQuery = $getConsulta[$cveNacionalidad];
                 $msg .= "<h4 class = 'text-success text-center mt-4'>Consulta realizada con exito.</h4>";
             } else {
                 $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe el registro que quiere consultar.</h4>";
@@ -135,39 +167,39 @@ $observations = "observaciones";
         </div>
         <div class="col-md-8">
             <label for="inputPassword4" class="form-label">Nombre(s)</label>
-            <input type="text" name="name" id="name" class="form-control" id="inputPassword4">
+            <input type="text" name="name" id="name" class="form-control" id="inputPassword4" value="<?php echo htmlspecialchars($nameQuery); ?>">
         </div>
         <div class="col-4">
             <label for="inputAddress" class="form-label">Apellido Paterno</label>
-            <input type="text" name="aPaterno" id="aPaterno" class="form-control" id="inputAddress">
+            <input type="text" name="aPaterno" id="aPaterno" class="form-control" id="inputAddress" value="<?php echo htmlspecialchars($lastname1Query); ?>">
         </div>
         <div class="col-4">
             <label for="inputAddress" class="form-label">Apellido Materno</label>
-            <input type="text" name="aMaterno" id="aMaterno" class="form-control" id="inputAddress">
+            <input type="text" name="aMaterno" id="aMaterno" class="form-control" id="inputAddress" value="<?php echo htmlspecialchars($lastname2Query); ?>">
         </div>
         <div class="col-md-4">
             <label for="inputCity" class="form-label">Estado Civil</label>
-            <input type="text" name="estadoCivil" id="estadoCivil" class="form-control" id="inputCity">
+            <input type="text" name="estadoCivil" id="estadoCivil" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($estadoCivilQuery); ?>">
         </div>
         <div class="col-12">
             <label for="inputAddress2" class="form-label">Direccion</label>
-            <input type="text" name="direccion" id="direccion" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+            <input type="text" name="direccion" id="direccion" class="form-control" id="inputAddress2" placeholder="Apartamento, Estudio, o Piso" value="<?php echo htmlspecialchars($direccionQuery); ?>">
         </div>
         <div class="col-3">
             <label for="inputAddress" class="form-label">Telefono</label>
-            <input type="text" name="telefono" id="telefono" class="form-control" id="inputAddress" placeholder="1234 Main St">
+            <input type="text" name="telefono" id="telefono" class="form-control" id="inputAddress" placeholder="1234 Main St" value="<?php echo htmlspecialchars($telefonoQuery); ?>">
         </div>
         <div class="col-3">
             <label for="inputAddress" class="form-label">Sexo</label>
-            <input type="text" name="sexo" id="sexo" class="form-control" id="inputAddress" placeholder="1234 Main St">
+            <input type="text" name="sexo" id="sexo" class="form-control" id="inputAddress" placeholder="1234 Main St" value="<?php echo htmlspecialchars($sexoQuery); ?>">
         </div>
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Fecha Nacimiento</label>
-            <input type="text" name="fechaNacimiento" id="fechaNacimiento" class="form-control" id="inputCity" placeholder="AAAA-MM-DD">
+            <input type="text" name="fechaNacimiento" id="fechaNacimiento" class="form-control" id="inputCity" placeholder="AAAA-MM-DD" value="<?php echo htmlspecialchars($fechaNacimientoQuery); ?>">
         </div>
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Estatus</label>
-            <input type="text" name="estatus" id="estatus" class="form-control" id="inputCity" placeholder="AAAA-MM-DD">
+            <input type="text" name="estatus" id="estatus" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($estatusQuery); ?>">
         </div>
         <!-- <div class="col-md-3">
             <label for="inputState" class="form-label">Estatus</label>
@@ -179,7 +211,7 @@ $observations = "observaciones";
         </div> -->
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Nacionalidad</label>
-            <input type="text" name="nacionalidad" id="nacionalidad" class="form-control" id="inputCity" placeholder="AAAA-MM-DD">
+            <input type="text" name="nacionalidad" id="nacionalidad" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($nacionalidadQuery); ?>">
         </div>
         <!-- <div class="col-md-3">
             <label for="inputState" class="form-label">Nacionalidad</label>
@@ -191,15 +223,15 @@ $observations = "observaciones";
         </div> -->
         <div class="col-md-3">
             <label for="inputZip" class="form-label">Escolaridad</label>
-            <input type="text" name="escolaridad" id="escolaridad" class="form-control" id="inputZip">
+            <input type="text" name="escolaridad" id="escolaridad" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($escolaridadQuery); ?>">
         </div>
         <div class="col-md-3">
             <label for="inputZip" class="form-label">Experiencia</label>
-            <input type="text" name="experiencia" id="experiencia" class="form-control" id="inputZip">
+            <input type="text" name="experiencia" id="experiencia" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($experienciaQuery); ?>">
         </div>
         <div class="col-md-3">
             <label for="inputZip" class="form-label">Perfil</label>
-            <input type="text" name="perfil" id="perfil" class="form-control" id="inputZip">
+            <input type="text" name="perfil" id="perfil" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($perfilQuery); ?>">
         </div>
         <!-- <div class="col-md-3">
             <label for="inputState" class="form-label">Fotos</label>
@@ -224,15 +256,15 @@ $observations = "observaciones";
         </div> -->
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Fecha Ingreso</label>
-            <input type="text" name="fechaIngreso" id="fechaIngreso" class="form-control" id="inputCity" placeholder="AAAA-MM-DD">
+            <input type="text" name="fechaIngreso" id="fechaIngreso" class="form-control" id="inputCity" placeholder="AAAA-MM-DD" value="<?php echo htmlspecialchars($fechaIngreso); ?>">
         </div>
         <div class="col-md-12">
             <label for="inputCity" class="form-label">Documentos</label>
-            <input type="text" name="idDocumentos" id="idDocumentos" class="form-control" id="inputCity">
+            <input type="text" name="idDocumentos" id="idDocumentos" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($idDocumentosQuery); ?>">
         </div>
         <div class="col-md-12">
             <label for="inputCity" class="form-label">Observaciones</label>
-            <input type="text" name="observaciones" id="observaciones" class="form-control" id="inputCity" placeholder="...">
+            <input type="text" name="observaciones" id="observaciones" class="form-control" id="inputCity" placeholder="..." value="<?php echo htmlspecialchars($observacionesQuery); ?>">
         </div>
 
         <!-- <div class="col-12">
