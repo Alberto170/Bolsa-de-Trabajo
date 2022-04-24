@@ -20,6 +20,7 @@ $perfilQuery = "";
 $fechaIngresoQuery = "";
 $idDocumentosQuery = "";
 $observacionesQuery = "";
+$nacionalidadNameQuery = "";
 
 //Name/Id de los Inputs
 $id = $_POST['id']; //id hare referencia a la clave de la tabla actual
@@ -39,6 +40,7 @@ $perfil = $_POST['perfil'];
 $fechaIngreso = $_POST['fechaIngreso'];
 $idDocumentos = $_POST['idDocumentos'];
 $observaciones = $_POST['observaciones'];
+$nacionalidadName = $_POST['nacionalidadName'];
 
 // Nombre de tabla y campos de tabla
 $table = "Bolsa";
@@ -110,7 +112,7 @@ $observations = "observaciones";
 
     // CONSULTA
     if (isset($_POST["consulta"])) {
-        if (strlen($id) >= 1) {
+        if (strlen($id) >=1) {
             $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id'";
             $resultado = mysqli_query($conexion, $consulta);
             $getConsulta = mysqli_fetch_array($resultado);
@@ -147,7 +149,8 @@ $observations = "observaciones";
         $resultado = mysqli_query($conexion, $consulta);
         $row = mysqli_fetch_array($resultado);
         if ($row > 0 && $name != "") {
-            $update = "UPDATE $table SET $nombre = '$name' WHERE $cveTabla = '$id'";
+            $update = "UPDATE $table SET $nombre='$name', $cvePerfil='$perfil', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatus', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cveExperiencia='$experiencia', $cveEscolaridad='$escolaridad', $idDocumentosBolsa='$idDocumentos', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveNacionalidad='$nacionalidad' 
+            WHERE $cveTabla = '$id'";
             $resultado = mysqli_query($conexion, $update);
             $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito.</h4>";
         } else {
@@ -258,7 +261,7 @@ $observations = "observaciones";
             <label for="inputCity" class="form-label">Fecha Ingreso</label>
             <input type="text" name="fechaIngreso" id="fechaIngreso" class="form-control" id="inputCity" placeholder="AAAA-MM-DD" value="<?php echo htmlspecialchars($fechaIngreso); ?>">
         </div>
-        <div class="col-md-12">
+        <div class="col-md-9">
             <label for="inputCity" class="form-label">Documentos</label>
             <input type="text" name="idDocumentos" id="idDocumentos" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($idDocumentosQuery); ?>">
         </div>
