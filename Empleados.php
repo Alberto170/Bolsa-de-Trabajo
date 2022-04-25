@@ -1,9 +1,6 @@
 <?php
 include("conexion.php");
 $msg = ""; //Cambiar los mensajes de cada validacion respecto a la tabla
-$estatusAlta = "Alta";
-$estatusBaja = "Baja";
-$estatusMuerto = "Muerto";
 
 //name de los Input para las Consultas
 $idQuery = ""; //Llena el campo id con el id de la tabla en html
@@ -16,14 +13,13 @@ $telefonoQuery = "";
 $sexoQuery = "";
 $fechaNacimientoQuery = "";
 $estatusQuery = "";
-$nacionalidadQuery = "";
-$escolaridadQuery = "";
-$experienciaQuery = "";
-$perfilQuery = "";
+$puestoQuery = "";
+$categoriaQuery = "";
+$departamentoQuery = "";
 $fechaIngresoQuery = "";
-$idDocumentosQuery = "";
+$idCursoQuery = "";
 $observacionesQuery = "";
-$nacionalidadNameQuery = "";
+
 
 //Name/Id de los Inputs
 $id = $_POST['id']; //id hare referencia a la clave de la tabla actual
@@ -36,42 +32,32 @@ $telefono = $_POST['telefono'];
 $sexo = $_POST['sexo'];
 $fechaNacimiento = $_POST['fechaNacimiento'];
 $estatus = $_POST['estatus'];
-$nacionalidad = $_POST['nacionalidad'];
-$escolaridad = $_POST['escolaridad'];
-$experiencia = $_POST['experiencia'];
-$perfil = $_POST['perfil'];
+$puesto = $_POST['puesto'];
+$categoria = $_POST['categoria'];
+$departamento = $_POST['departamento'];
 $fechaIngreso = $_POST['fechaIngreso'];
-$idDocumentos = $_POST['idDocumentos'];
+$idCurso = $_POST['idCurso'];
 $observaciones = $_POST['observaciones'];
-$nacionalidadName = $_POST['nacionalidadName'];
 
 // Nombre de tabla y campos de tabla
-$table = "Bolsa";
-$cveTabla = "noControl";
+$table = "Empleados";
+$cveTabla = "cveEmpleado";
 $nombre = "nombre";
 $lastname1 = "aPaterno";
 $lastname2 = "aMaterno";
 $address = "direccion";
-$phoneNumber = "telefono";
+$phoneNumber = "telefono"; // type number
 $sex = "sexo";
 $status = "estatus";
 $maritalStatus = "estadoCivil";
 $birthDay = "fechaNacimiento";
 $admissionDate = "fechaIngreso";
-$cveExperiencia = "cveExperiencia";
-$cveEscolaridad = "cveEscolaridad";
-$cveNacionalidad = "cveNacionalidad";
-$cvePerfil = "cvePerfil";
-$idDocumentosBolsa = "idDocumentosBolsa";
-$observations = "observaciones";
-
-
-$empleadoTable = "Empleados";
-$cveEmpleado = "cveEmpleado";
 $cvePuesto = "cvePuesto";
 $cveCategoria = "cveCategoria";
 $cveDepartamento = "cveDepartamento";
+// QUITAR PERFIL DE TODO ESTE DOCUMENTOS RECORDAR
 $idCursoEmpleado = "idCursoEmpleado";
+$observations = "observaciones";
 ?>
 
 <!DOCTYPE html>
@@ -98,21 +84,11 @@ $idCursoEmpleado = "idCursoEmpleado";
         if ($row > 0) {
             $msg .= "<h4 class = 'text-danger text-center mt-4' >Ya existe la clave y/o nombre.</h4>";
         } elseif (strlen($id) >= 1 && strcmp($estatus, "Baja") == 0) {
-            $consulta = "INSERT INTO $table($cveTabla, $nombre, $cvePerfil, $lastname1, $lastname2, $address, $phoneNumber, $sex, $status, $maritalStatus, $birthDay, $cveExperiencia, $cveEscolaridad, $idDocumentosBolsa, $observations, $admissionDate, $cveNacionalidad) 
-            VALUES ('$id', '$name', '$perfil', '$aPaterno', '$aMaterno', '$direccion', '$telefono', '$sexo', '$estatus', '$estadoCivil', '$fechaNacimiento', '$experiencia', '$escolaridad', '$idDocumentos', '$observaciones', '$fechaIngreso', '$nacionalidad')";
+            $consulta = "INSERT INTO $table($cveTabla, $nombre, $lastname1, $lastname2, $address, $phoneNumber, $sex, $status, $maritalStatus, $birthDay, $cvePuesto, $cveCategoria, $idCursoEmpleado, $observations, $admissionDate, $cveDepartamento) 
+            VALUES ('$id', '$name', '$aPaterno', '$aMaterno', '$direccion', '$telefono', '$sexo', '$estatus', '$estadoCivil', '$fechaNacimiento', '$puesto', '$categoria', '$idCurso', '$observaciones', '$fechaIngreso', '$departamento')";
             $resultado = mysqli_query($conexion, $consulta);
             $msg .= "<h4 class = 'text-success text-center mt-4'>Alta realizada con exito con Estatus Baja.</h4>";
-        } elseif (strlen($id) >= 1 && strcmp($estatus, $estatusAlta) == 0) {
-            $consulta = "INSERT INTO $table($cveTabla, $nombre, $cvePerfil, $lastname1, $lastname2, $address, $phoneNumber, $sex, $status, $maritalStatus, $birthDay, $cveExperiencia, $cveEscolaridad, $idDocumentosBolsa, $observations, $admissionDate, $cveNacionalidad) 
-            VALUES ('$id', '$name', '$perfil', '$aPaterno', '$aMaterno', '$direccion', '$telefono', '$sexo', '$estatusBaja', '$estadoCivil', '$fechaNacimiento', '$experiencia', '$escolaridad', '$idDocumentos', '$observaciones', '$fechaIngreso', '$nacionalidad')";
-            $resultado = mysqli_query($conexion, $consulta);
-
-            if($resultado){
-                $consulta = "INSERT INTO Empleados(cveEmpleado, $nombre, $lastname1, $lastname2, $address, $phoneNumber, $sex, $status, $maritalStatus, $birthDay, cvePuesto, cveCategoria, idCursoEmpleado, $observations, $admissionDate, cveDepartamento) 
-                VALUES ('$id', '$name', '$aPaterno', '$aMaterno', '$direccion', '$telefono', '$sexo', '$estatus', '$estadoCivil', '$fechaNacimiento', 1, 1, 1, '$observaciones', '$fechaIngreso', 1)";
-                $resultado = mysqli_query($conexion, $consulta);
-            }            
-            
+        } elseif (strlen($id) >= 1 && strcmp($estatus, "Alta") == 0) {
             $msg .= "<h4 class = 'text-success text-center mt-4'>Alta realizada con exito con Estatus Alta.</h4>";
         } elseif (strlen($id) >= 1 && strcmp($estatus, "Muerto") == 0) {
             $msg .= "<h4 class = 'text-success text-center mt-4'>Alta realizada con exito con Estatus Muerto.</h4>";
@@ -146,19 +122,18 @@ $idCursoEmpleado = "idCursoEmpleado";
                 $nameQuery = $getConsulta[$nombre];
                 $lastname1Query = $getConsulta[$lastname1];
                 $lastname2Query = $getConsulta[$lastname2];
-                $perfilQuery = $getConsulta[$cvePerfil];
                 $direccionQuery = $getConsulta[$address];
                 $telefonoQuery = $getConsulta[$phoneNumber];
                 $sexoQuery = $getConsulta[$sex];
                 $estatusQuery = $getConsulta[$status];
                 $estadoCivilQuery = $getConsulta[$maritalStatus];
                 $fechaNacimientoQuery = $getConsulta[$birthDay];
-                $experienciaQuery = $getConsulta[$cveExperiencia];
-                $escolaridadQuery = $getConsulta[$cveEscolaridad];
+                $departamentoQuery = $getConsulta[$cveDepartamento];
+                $categoriaQuery = $getConsulta[$cveCategoria];
                 $fechaIngresoQuery = $getConsulta[$admissionDate];
-                $idDocumentosQuery= $getConsulta[$idDocumentosBolsa];
+                $idCursoQuery= $getConsulta[$idCursoEmpleado];
                 $observacionesQuery = $getConsulta[$observations];
-                $nacionalidadQuery = $getConsulta[$cveNacionalidad];
+                $puestoQuery = $getConsulta[$cvePuesto];
                 $msg .= "<h4 class = 'text-success text-center mt-4'>Consulta realizada con exito.</h4>";
             } else {
                 $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe el registro que quiere consultar.</h4>";
@@ -173,16 +148,11 @@ $idCursoEmpleado = "idCursoEmpleado";
         $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id'";
         $resultado = mysqli_query($conexion, $consulta);
         $row = mysqli_fetch_array($resultado);
-        if ($row > 0 && $name != "" && strcmp($estatus, $estatusAlta) == 0) {
-            $update = "UPDATE $table SET $nombre='$name', $cvePerfil='$perfil', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatus', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cveExperiencia='$experiencia', $cveEscolaridad='$escolaridad', $idDocumentosBolsa='$idDocumentos', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveNacionalidad='$nacionalidad' 
+        if ($row > 0 && $name != "") {
+            $update = "UPDATE $table SET $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatus', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cvePuesto='$puesto', $cveCategoria='$categoria', $idCursoEmpleado='$idCurso', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveDepartamento='$departamento' 
             WHERE $cveTabla = '$id'";
             $resultado = mysqli_query($conexion, $update);
-            if($resultado){
-                $update = "UPDATE $empleadoTable SET $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatusBaja', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cvePuesto='$perfil', $cveCategoria='$perfil', $idCursoEmpleado='$perfil', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveDepartamento='$perfil' 
-                WHERE $cveEmpleado = '$id'";
-                $resultado = mysqli_query($conexion, $update);
-            }
-            $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito con Estatus Baja.</h4>";
+            $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito.</h4>";
         } else {
             $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe registro a modificar.</h4>";
         }
@@ -192,8 +162,8 @@ $idCursoEmpleado = "idCursoEmpleado";
     <!-- Inicio del HTML FORM -->
     <h1>Bolsa de Trabajo</h1>
     <h2>Mantenimientos Fuertes</h2>
-    <h2>Mantenimiento de Bolsa.</h2>
-    <form action="Bolsa.php" method="POST" name="form" id="form" class="row g-3">
+    <h2>Mantenimiento de Empleados.</h2>
+    <form action="Empleados.php" method="POST" name="form" id="form" class="row g-3">
         <div class="col-md-4">
             <label for="" class="form-label">Clave Empleado</label>
             <input type="text" name="id" id="id" class="form-control" value="<?php echo htmlspecialchars($idQuery); ?>">
@@ -235,28 +205,24 @@ $idCursoEmpleado = "idCursoEmpleado";
             <input type="text" name="estatus" id="estatus" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($estatusQuery); ?>">
         </div>
         <div class="col-md-3">
-            <label for="inputCity" class="form-label">Nacionalidad</label>
-            <input type="text" name="nacionalidad" id="nacionalidad" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($nacionalidadQuery); ?>">
+            <label for="inputCity" class="form-label">Puesto</label>
+            <input type="text" name="puesto" id="puesto" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($puestoQuery); ?>">
         </div>
         <div class="col-md-3">
-            <label for="inputZip" class="form-label">Escolaridad</label>
-            <input type="text" name="escolaridad" id="escolaridad" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($escolaridadQuery); ?>">
+            <label for="inputZip" class="form-label">Categoria</label>
+            <input type="text" name="categoria" id="categoria" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($categoriaQuery); ?>">
         </div>
         <div class="col-md-3">
-            <label for="inputZip" class="form-label">Experiencia</label>
-            <input type="text" name="experiencia" id="experiencia" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($experienciaQuery); ?>">
-        </div>
-        <div class="col-md-3">
-            <label for="inputZip" class="form-label">Perfil</label>
-            <input type="text" name="perfil" id="perfil" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($perfilQuery); ?>">
+            <label for="inputZip" class="form-label">Departamento</label>
+            <input type="text" name="departamento" id="departamento" class="form-control" id="inputZip" value="<?php echo htmlspecialchars($departamentoQuery); ?>">
         </div>
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Fecha Ingreso</label>
             <input type="text" name="fechaIngreso" id="fechaIngreso" class="form-control" id="inputCity" placeholder="AAAA-MM-DD" value="<?php echo htmlspecialchars($fechaIngresoQuery); ?>">
         </div>
         <div class="col-md-9">
-            <label for="inputCity" class="form-label">Documentos</label>
-            <input type="text" name="idDocumentos" id="idDocumentos" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($idDocumentosQuery); ?>">
+            <label for="inputCity" class="form-label">Curso</label>
+            <input type="text" name="idCurso" id="idCurso" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($idCursoQuery); ?>">
         </div>
         <div class="col-md-12">
             <label for="inputCity" class="form-label">Observaciones</label>

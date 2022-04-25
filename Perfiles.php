@@ -26,8 +26,7 @@ $secondField = "perfil";
 
     <?php
     // ALTA
-    if (
-        isset($_POST["alta"])) {
+    if (isset($_POST["alta"])) {
         $consulta = "SELECT * FROM $table WHERE $firstField = '$id' || $secondField = '$name'";
         $resultado = mysqli_query($conexion, $consulta);
         $row = mysqli_fetch_array($resultado);
