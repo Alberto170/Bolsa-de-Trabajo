@@ -1,6 +1,9 @@
 <?php
 include("conexion.php");
 $msg = ""; //Cambiar los mensajes de cada validacion respecto a la tabla
+$estatusAlta = "Alta";
+$estatusBaja = "Baja";
+$estatusMuerto = "Muerto";
 
 //name de los Input para las Consultas
 $idQuery = ""; //Llena el campo id con el id de la tabla en html
@@ -58,6 +61,14 @@ $cveDepartamento = "cveDepartamento";
 // QUITAR PERFIL DE TODO ESTE DOCUMENTOS RECORDAR
 $idCursoEmpleado = "idCursoEmpleado";
 $observations = "observaciones";
+
+$bolsaTable = "Bolsa";
+$cveBolsa = "noControl";
+$cveExperiencia = "cveExperiencia";
+$cveEscolaridad = "cveEscolaridad";
+$cveNacionalidad = "cveNacionalidad";
+$cvePerfil = "cvePerfil";
+$idDocumentosBolsa = "idDocumentosBolsa";
 ?>
 
 <!DOCTYPE html>
@@ -148,11 +159,26 @@ $observations = "observaciones";
         $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id'";
         $resultado = mysqli_query($conexion, $consulta);
         $row = mysqli_fetch_array($resultado);
-        if ($row > 0 && $name != "") {
+        if ($row > 0 && $name != "" && strcmp($estatus, $estatusAlta) == 0) {
             $update = "UPDATE $table SET $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatus', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cvePuesto='$puesto', $cveCategoria='$categoria', $idCursoEmpleado='$idCurso', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveDepartamento='$departamento' 
             WHERE $cveTabla = '$id'";
             $resultado = mysqli_query($conexion, $update);
+            if($resultado){
+                $update = "UPDATE $bolsaTable SET $status='$estatusBaja', $observations='$observaciones', $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $maritalStatus='$estadoCivil' WHERE $cveBolsa = '$id'";
+                $resultado = mysqli_query($conexion, $update);
+            }
             $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito.</h4>";
+        } if ($row > 0 && $name != "" && strcmp($estatus, $estatusBaja) == 0) {
+            $update = "UPDATE $table SET $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatus', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cvePuesto='$puesto', $cveCategoria='$categoria', $idCursoEmpleado='$idCurso', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveDepartamento='$departamento' 
+            WHERE $cveTabla = '$id'";
+            $resultado = mysqli_query($conexion, $update);
+            if($resultado){
+                $update = "UPDATE $bolsaTable SET $status='$estatusAlta', $observations='$observaciones', $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $maritalStatus='$estadoCivil' WHERE $cveBolsa = '$id'";
+                $resultado = mysqli_query($conexion, $update);
+            }
+            $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito.</h4>";
+        } if($row > 0 && $name != "" && strcmp($estatus, $estatusMuerto) == 0){
+            $msg .= "<h4 class = 'text-danger text-center mt-4' >Para modificar Estatus Muerto hacerlo desde Mantenimiento Bolsa</h4>";
         } else {
             $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe registro a modificar.</h4>";
         }
@@ -190,11 +216,11 @@ $observations = "observaciones";
         </div>
         <div class="col-3">
             <label for="inputAddress" class="form-label">Telefono</label>
-            <input type="text" name="telefono" id="telefono" class="form-control" id="inputAddress" placeholder="1234 Main St" value="<?php echo htmlspecialchars($telefonoQuery); ?>">
+            <input type="text" name="telefono" id="telefono" class="form-control" id="inputAddress" placeholder="Ej: 6864566546" value="<?php echo htmlspecialchars($telefonoQuery); ?>">
         </div>
         <div class="col-3">
             <label for="inputAddress" class="form-label">Sexo</label>
-            <input type="text" name="sexo" id="sexo" class="form-control" id="inputAddress" placeholder="1234 Main St" value="<?php echo htmlspecialchars($sexoQuery); ?>">
+            <input type="text" name="sexo" id="sexo" class="form-control" id="inputAddress" placeholder="H/M" value="<?php echo htmlspecialchars($sexoQuery); ?>">
         </div>
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Fecha Nacimiento</label>
@@ -202,7 +228,7 @@ $observations = "observaciones";
         </div>
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Estatus</label>
-            <input type="text" name="estatus" id="estatus" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($estatusQuery); ?>">
+            <input type="text" name="estatus" id="estatus" class="form-control" id="inputCity" placeholder="Alta/Baja/Muerto" value="<?php echo htmlspecialchars($estatusQuery); ?>">
         </div>
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Puesto</label>
@@ -229,8 +255,8 @@ $observations = "observaciones";
             <input type="text" name="observaciones" id="observaciones" class="form-control" id="inputCity" placeholder="..." value="<?php echo htmlspecialchars($observacionesQuery); ?>">
         </div>
         <div class="container-btn">
-            <button class="btn btn-primary" type="submit" name="alta">Alta</button>
-            <button class="btn btn-primary" type="submit" name="baja">Baja</button>
+            <!-- <button class="btn btn-primary" type="submit" name="alta">Alta</button> -->
+            <!-- <button class="btn btn-primary" type="submit" name="baja">Baja</button> -->
             <button class="btn btn-primary" type="submit" name="modificar">Modificar</button>
             <button class="btn btn-primary" type="submit" name="consulta">Consulta</button>
             <a href="index.html" class="btn btn-danger btn-lg" role="button">Salir</a>

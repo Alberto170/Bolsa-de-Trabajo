@@ -67,13 +67,12 @@ $observations = "observaciones";
 
 
 $empleadoTable = "Empleados";
-$muertoTable = "archivoMuerto";
 $cveEmpleado = "cveEmpleado";
 $cvePuesto = "cvePuesto";
 $cveCategoria = "cveCategoria";
 $cveDepartamento = "cveDepartamento";
 $idCursoEmpleado = "idCursoEmpleado";
-$motivo = "motivo";
+
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +85,7 @@ $motivo = "motivo";
     <!-- <link rel="stylesheet" href="style.css"> -->
     <link rel="stylesheet" href="styleMantenimieto.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Bolsa de Trabajo</title>
 </head>
 
@@ -98,8 +98,11 @@ $motivo = "motivo";
         $resultado = mysqli_query($conexion, $consulta);
         $row = mysqli_fetch_array($resultado);
         if ($row > 0) {
-            $msg .= "<h4 class = 'text-danger text-center mt-4' >Ya existe la clave</h4>";
+            $msg .= "<h4 class = 'text-danger text-center mt-4' >Ya existe la clave y/o nombre.</h4>";
         } elseif (strlen($id) >= 1 && strcmp($estatus, $estatusBaja) == 0) {
+            // $consulta = "INSERT INTO $table($cveTabla, $nombre, $cvePerfil, $lastname1, $lastname2, $address, $phoneNumber, $sex, $status, $maritalStatus, $birthDay, $cveExperiencia, $cveEscolaridad, $idDocumentosBolsa, $observations, $admissionDate, $cveNacionalidad) 
+            // VALUES ('$id', '$name', '$perfil', '$aPaterno', '$aMaterno', '$direccion', '$telefono', '$sexo', '$estatus', '$estadoCivil', '$fechaNacimiento', '$experiencia', '$escolaridad', '$idDocumentos', '$observaciones', '$fechaIngreso', '$nacionalidad')";
+            // $resultado = mysqli_query($conexion, $consulta);
             $msg .= "<h4 class = 'text-danger text-center mt-4'>El registro solo se realiza con Estatus Alta, favor de verificar.</h4>";
         } elseif (strlen($id) >= 1 && strcmp($estatus, $estatusAlta) == 0) {
             $consulta = "INSERT INTO $table($cveTabla, $nombre, $cvePerfil, $lastname1, $lastname2, $address, $phoneNumber, $sex, $status, $maritalStatus, $birthDay, $cveExperiencia, $cveEscolaridad, $idDocumentosBolsa, $observations, $admissionDate, $cveNacionalidad) 
@@ -114,13 +117,13 @@ $motivo = "motivo";
             
             $msg .= "<h4 class = 'text-success text-center mt-4'>Alta realizada con exito con Estatus Alta.</h4>";
         } elseif (strlen($id) >= 1 && strcmp($estatus, "Muerto") == 0) {
-            $msg .= "<h4 class = 'text-danger text-center mt-4'>El registro solo se realiza con Estatus Alta, favor de verificar.</h4>";
+            $msg .= "<h4 class = 'text-success text-center mt-4'>Alta realizada con exito con Estatus Muerto.</h4>";
         } else {
             $msg .= "<h4 class = 'text-danger text-center mt-4' >Llene todos los campos por favor</h4>";
         }
     }
 
-    // BAJA COMPLETADO
+    // BAJA
     if (isset($_POST["baja"])) {
         $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id'";
         $resultado = mysqli_query($conexion, $consulta);
@@ -128,10 +131,6 @@ $motivo = "motivo";
         if ($row > 0) {
             $delete = "DELETE FROM $table WHERE $cveTabla = '$id'";
             $resultado = mysqli_query($conexion, $delete);
-            if($resultado){
-                $delete = "DELETE FROM $empleadoTable WHERE $cveEmpleado = '$id'";
-                $resultado = mysqli_query($conexion, $delete);
-            }
             $msg .= "<h4 class = 'text-success text-center mt-4'>Baja realizada con exito.</h4>";
         } else {
             $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe registro a eliminar.</h4>";
@@ -142,11 +141,9 @@ $motivo = "motivo";
     if (isset($_POST["consulta"])) {
         if (strlen($id) >=1) {
             $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id'";
-            $consulta2 = "SELECT b.noControl , b.nombre, b.aPaterno, b.aMaterno, b.direccion,b.telefono, b.sexo, b.estatus, b.estadoCivil, b.fechaNacimiento, b.fechaNacimiento, b.fechaIngreso, b.observaciones, b.idDocumentosBolsa, b.cvePerfil, p.perfil , b.cveNacionalidad, n.nacionalidad, b.cveEscolaridad, e.escolaridad 
-            FROM Bolsa b, Perfiles p, Nacionalidades n, Escolaridades e WHERE $cveTabla = '$id' AND AND n.cveNacionalidad = '$nacionalidad'  AND e.cveEscolaridad = '$escolaridad'  AND p.cvePerfil = '$perfil'; ";
             $resultado = mysqli_query($conexion, $consulta);
             $getConsulta = mysqli_fetch_array($resultado);
-            if ($getConsulta > 0) {
+            if ($getConsulta >= 0) {
                 $idQuery = $getConsulta[$cveTabla];
                 $nameQuery = $getConsulta[$nombre];
                 $lastname1Query = $getConsulta[$lastname1];
@@ -164,12 +161,50 @@ $motivo = "motivo";
                 $idDocumentosQuery= $getConsulta[$idDocumentosBolsa];
                 $observacionesQuery = $getConsulta[$observations];
                 $nacionalidadQuery = $getConsulta[$cveNacionalidad];
+                $queryNacionalidad = "SELECT nacionalidad FROM Nacionalidades WHERE cveNacionalidad = '$nacionalidad'"; 
+                $resultNacionalidad = mysqli_query($conexion, $queryNacionalidad);
+                $rowNacionalidad = mysqli_fetch_array($resultNacionalidad);
                 $msg .= "<h4 class = 'text-success text-center mt-4'>Consulta realizada con exito.</h4>";
             } else {
                 $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe el registro que quiere consultar.</h4>";
             }
         } else {
             $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe el registro que quiere consultar.</h4>";
+        }
+    }
+
+    if(isset($_POST["consultaCampos"])){
+        $queryNacionalidad = "SELECT nacionalidad FROM Nacionalidades WHERE cveNacionalidad = '$nacionalidad'"; 
+        $resultNacionalidad = mysqli_query($conexion, $queryNacionalidad);
+        $rowNacionalidad = mysqli_fetch_array($resultNacionalidad);
+        if($rowNacionalidad > 0){
+            $consulta = "SELECT * FROM $table WHERE $cveTabla = '$id'";
+            $resultado = mysqli_query($conexion, $consulta);
+            $getConsulta = mysqli_fetch_array($resultado);
+            if($getConsulta > 0){
+                $idQuery = $getConsulta[$cveTabla];
+                $nameQuery = $getConsulta[$nombre];
+                $lastname1Query = $getConsulta[$lastname1];
+                $lastname2Query = $getConsulta[$lastname2];
+                $perfilQuery = $getConsulta[$cvePerfil];
+                $direccionQuery = $getConsulta[$address];
+                $telefonoQuery = $getConsulta[$phoneNumber];
+                $sexoQuery = $getConsulta[$sex];
+                $estatusQuery = $getConsulta[$status];
+                $estadoCivilQuery = $getConsulta[$maritalStatus];
+                $fechaNacimientoQuery = $getConsulta[$birthDay];
+                $experienciaQuery = $getConsulta[$cveExperiencia];
+                $escolaridadQuery = $getConsulta[$cveEscolaridad];
+                $fechaIngresoQuery = $getConsulta[$admissionDate];
+                $idDocumentosQuery= $getConsulta[$idDocumentosBolsa];
+                $observacionesQuery = $getConsulta[$observations];
+                // $nacionalidadQuery = $getConsulta[$cveNacionalidad];
+                $nacionalidadQuery = $nacionalidad;
+                // $queryNacionalidad = "SELECT nacionalidad FROM Nacionalidades WHERE cveNacionalidad = '$nacionalidad'"; 
+                // $resultNacionalidad = mysqli_query($conexion, $queryNacionalidad);
+                // $rowNacionalidad = mysqli_fetch_array($resultNacionalidad);
+                $msg .= "<h4 class = 'text-success text-center mt-4'>Consulta realizada con exito.</h4>";
+            }
         }
     }
 
@@ -183,7 +218,7 @@ $motivo = "motivo";
             WHERE $cveTabla = '$id'";
             $resultado = mysqli_query($conexion, $update);
             if($resultado){
-                $update = "UPDATE $empleadoTable SET $status='$estatusBaja', $observations='$observaciones', $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $maritalStatus='$estadoCivil' WHERE $cveEmpleado = '$id'";
+                $update = "UPDATE $empleadoTable SET $status='$estatusBaja' WHERE $cveEmpleado = '$id'";
                 $resultado = mysqli_query($conexion, $update);
             }
             $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito</h4>";
@@ -192,23 +227,20 @@ $motivo = "motivo";
             WHERE $cveTabla = '$id'";
             $resultado = mysqli_query($conexion, $update);
             if($resultado){
-                $update = "UPDATE $empleadoTable SET $status='$estatusAlta', $observations='$observaciones', $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $maritalStatus='$estadoCivil' WHERE $cveEmpleado = '$id'";
+                $update = "UPDATE $empleadoTable SET $status='$estatusAlta' WHERE $cveEmpleado = '$id'";
                 $resultado = mysqli_query($conexion, $update);
             }
             $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito</h4>";
         } if ($row > 0 && $name != "" && strcmp($estatus, $estatusMuerto) == 0) {
-            $consulta = "INSERT INTO archivoMuerto(cveEmpleado, $nombre, $lastname1, $lastname2, $address, $phoneNumber, $sex, $status, $maritalStatus, $birthDay, $motivo, $admissionDate) 
-                VALUES ('$id', '$name', '$aPaterno', '$aMaterno', '$direccion', '$telefono', '$sexo', '$estatus', '$estadoCivil', '$fechaNacimiento', '$observaciones', '$fechaIngreso')";
-                $resultado = mysqli_query($conexion, $consulta);
-                if($resultado){
-                    $delete = "DELETE FROM $table WHERE $cveTabla = '$id'";
-                    $resultado = mysqli_query($conexion, $delete);
-                    if($resultado){
-                        $delete = "DELETE FROM $empleadoTable WHERE $cveEmpleado = '$id'";
-                        $resultado = mysqli_query($conexion, $delete);
-                    }
-                }
-                $msg .= "<h4 class = 'text-success text-center mt-4'>Registro mandado a Archivo Muerto.</h4>";
+            $update = "UPDATE $table SET $nombre='$name', $cvePerfil='$perfil', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatus', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cveExperiencia='$experiencia', $cveEscolaridad='$escolaridad', $idDocumentosBolsa='$idDocumentos', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveNacionalidad='$nacionalidad' 
+            WHERE $cveTabla = '$id'";
+            $resultado = mysqli_query($conexion, $update);
+            if($resultado){
+                $update = "UPDATE $empleadoTable SET $nombre='$name', $lastname1='$aPaterno', $lastname2='$aMaterno', $address='$direccion', $phoneNumber='$telefono', $sex='$sexo', $status='$estatusAlta', $maritalStatus='$estadoCivil', $birthDay='$fechaNacimiento', $cvePuesto='$perfil', $cveCategoria='$perfil', $idCursoEmpleado='$perfil', $observations='$observaciones', $admissionDate='$fechaIngreso', $cveDepartamento='$perfil' 
+                WHERE $cveEmpleado = '$id'";
+                $resultado = mysqli_query($conexion, $update);
+            }
+            $msg .= "<h4 class = 'text-success text-center mt-4'>Registro modificado con exito</h4>";
         } else {
             $msg .= "<h4 class = 'text-danger text-center mt-4' >No existe registro a modificar.</h4>";
         }
@@ -219,7 +251,7 @@ $motivo = "motivo";
     <h1>Bolsa de Trabajo</h1>
     <h2>Mantenimientos Fuertes</h2>
     <h2>Mantenimiento de Bolsa.</h2>
-    <form action="Bolsa.php" method="POST" name="form" id="form" class="row g-3">
+    <form action="bolsa2.php" method="POST" name="form" id="form" class="row g-3">
         <div class="col-md-4">
             <label for="" class="form-label">Clave Empleado</label>
             <input type="text" name="id" id="id" class="form-control" value="<?php echo htmlspecialchars($idQuery); ?>">
@@ -262,7 +294,16 @@ $motivo = "motivo";
         </div>
         <div class="col-md-3">
             <label for="inputCity" class="form-label">Nacionalidad</label>
-            <input type="text" name="nacionalidad" id="nacionalidad" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($nacionalidadQuery); ?>">
+            <input onkeyup="buscarAhora($('#nacionalidad').val());" type="text" name="nacionalidad" id="nacionalidad" class="form-control" id="inputCity" value="<?php echo htmlspecialchars($nacionalidadQuery); ?>">
+        </div>
+        <div class="col-md-3">
+            <label for="inputCity" class="form-label">Resultado</label>
+            <p>
+                <?php
+                    echo $rowNacionalidad["nacionalidad"]; 
+                ?>
+            </p>
+            <input type="text" name="nacionalidadResultado" id="nacionalidadResultado" class="form-control" id="inputCity" value="<?php echo $rowNacionalidad["nacionalidad"]; ?>">
         </div>
         <div class="col-md-3">
             <label for="inputZip" class="form-label">Escolaridad</label>
@@ -293,6 +334,7 @@ $motivo = "motivo";
             <button class="btn btn-primary" type="submit" name="baja">Baja</button>
             <button class="btn btn-primary" type="submit" name="modificar">Modificar</button>
             <button class="btn btn-primary" type="submit" name="consulta">Consulta</button>
+            <button class="btn btn-primary" type="submit" name="consultaCampos">Campos</button>
             <a href="index.html" class="btn btn-danger btn-lg" role="button">Salir</a>
         </div>
         <!-- msg son los mensajes de errores para la validacion -->
@@ -302,6 +344,18 @@ $motivo = "motivo";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-W8fXfP3gkOKtndU4JGtKDvXbO53Wy8SZCQHczT5FMiiqmQfUpWbYdTil/SxwZgAN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js" integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        function buscarAhora(buscar){
+            var parametros = {"nacionalidad":nacionalidad}
+            $.ajax({
+                data:parametros,
+                type: 'POST',
+                url: 'buscardor.php',
+                success: function(data) {
+                    document.getElementById("nacionalidadResultado").innerHTML = data;
+                }
+            })
+        }
+    </script>
 </body>
-
 </html>
